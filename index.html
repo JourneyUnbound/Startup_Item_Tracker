@@ -1,72 +1,109 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Business Supply Tracker</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: var(--font-sans); color: var(--color-text-primary); }
-  .container { padding: 1rem 0; }
-  h2 { font-size: 18px; font-weight: 500; margin-bottom: 1rem; }
-  .add-form { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-bottom: 1.5rem; }
-  .form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 2fr; gap: 8px; margin-bottom: 8px; }
-  .form-grid input { width: 100%; }
-  input[type="text"], input[type="number"], input[type="url"] {
-    border: 0.5px solid var(--color-border-secondary);
-    border-radius: var(--border-radius-md);
-    padding: 7px 10px;
-    font-size: 14px;
-    font-family: var(--font-sans);
-    color: var(--color-text-primary);
-    background: var(--color-background-primary);
-    width: 100%;
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #f7f6f2; --surface: #ffffff; --surface2: #f0efe9;
+    --border: #e2e0d8; --border2: #c8c6bc;
+    --text: #1a1917; --text2: #6b6960; --text3: #9b9a94;
+    --accent: #2d5a3d; --accent-light: #e8f0eb; --accent-text: #1e3d2a;
+    --danger: #c0392b; --danger-light: #fdf0ef;
+    --info: #1a4a7a; --radius: 8px; --radius-lg: 12px;
   }
-  input:focus { outline: none; border-color: var(--color-border-primary); }
-  .label { font-size: 12px; color: var(--color-text-secondary); margin-bottom: 3px; }
-  .btn { border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 7px 14px; font-size: 14px; cursor: pointer; background: transparent; color: var(--color-text-primary); font-family: var(--font-sans); }
-  .btn:hover { background: var(--color-background-secondary); }
-  .btn-primary { background: var(--color-text-primary); color: var(--color-background-primary); border-color: var(--color-text-primary); }
-  .btn-primary:hover { opacity: 0.85; }
-  .btn-danger { color: var(--color-text-danger); border-color: var(--color-border-danger); }
-  .btn-danger:hover { background: var(--color-background-danger); }
-  .btn-sm { padding: 4px 9px; font-size: 12px; }
-  table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
-  th { text-align: left; font-weight: 500; font-size: 12px; color: var(--color-text-secondary); padding: 6px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); }
-  td { padding: 8px 10px; border-bottom: 0.5px solid var(--color-border-tertiary); vertical-align: middle; word-break: break-word; }
-  tr:last-child td { border-bottom: none; }
-  tr:hover td { background: var(--color-background-secondary); }
-  .tag { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); }
-  .summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
-  .metric { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 1rem; }
-  .metric-label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 4px; }
-  .metric-value { font-size: 22px; font-weight: 500; }
-  .compare-panel { background: var(--color-background-secondary); border-radius: var(--border-radius-lg); padding: 1rem 1.25rem; margin-top: 1.5rem; }
-  .compare-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-top: 10px; }
-  .compare-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 0.9rem; }
-  .compare-card.selected { border: 2px solid var(--color-border-info); }
-  .compare-card .name { font-weight: 500; font-size: 14px; margin-bottom: 4px; }
-  .compare-card .price { font-size: 18px; font-weight: 500; margin: 6px 0; }
-  .compare-card .source { font-size: 11px; color: var(--color-text-secondary); word-break: break-all; }
-  .best-badge { background: var(--color-background-info); color: var(--color-text-info); font-size: 11px; padding: 2px 8px; border-radius: var(--border-radius-md); display: inline-block; margin-bottom: 6px; }
-  .tabs { display: flex; gap: 4px; margin-bottom: 1rem; }
-  .tab { padding: 6px 14px; font-size: 14px; border-radius: var(--border-radius-md); cursor: pointer; border: 0.5px solid transparent; color: var(--color-text-secondary); }
-  .tab.active { border-color: var(--color-border-secondary); color: var(--color-text-primary); background: var(--color-background-primary); }
+  html, body { background: var(--bg); min-height: 100vh; }
+  body { font-family: Georgia, serif; color: var(--text); padding: 2rem 1rem; }
+  .wrapper { max-width: 980px; margin: 0 auto; }
+  header { margin-bottom: 2rem; border-bottom: 1.5px solid var(--border2); padding-bottom: 1.25rem; display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  header p { font-size: 13px; color: var(--text2); font-family: 'Courier New', monospace; }
+  .tabs { display: flex; margin-bottom: 1.5rem; border-bottom: 1.5px solid var(--border); }
+  .tab { padding: 8px 20px; font-size: 14px; cursor: pointer; border: none; background: transparent; color: var(--text2); font-family: Georgia, serif; border-bottom: 2.5px solid transparent; margin-bottom: -1.5px; transition: color 0.15s; }
+  .tab.active { color: var(--text); border-bottom-color: var(--text); font-weight: 700; }
+  .tab:hover:not(.active) { color: var(--text); }
   .section { display: none; }
   .section.visible { display: block; }
-  .url-link { color: var(--color-text-info); text-decoration: none; font-size: 12px; }
+  .add-form { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1.25rem; margin-bottom: 1.5rem; }
+  .add-form h3 { font-size: 11px; font-weight: normal; margin-bottom: 1rem; font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text3); }
+  .form-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 2fr; gap: 10px; margin-bottom: 10px; }
+  @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr 1fr; } }
+  .field label { display: block; font-size: 11px; color: var(--text3); margin-bottom: 4px; font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 0.5px; }
+  input[type="text"], input[type="number"], input[type="url"], select { width: 100%; border: 1px solid var(--border); border-radius: var(--radius); padding: 7px 10px; font-size: 14px; font-family: Georgia, serif; color: var(--text); background: var(--bg); transition: border-color 0.15s; }
+  input:focus, select:focus { outline: none; border-color: var(--border2); }
+  .form-bottom { display: flex; gap: 10px; align-items: flex-end; }
+  .form-bottom .field { flex: 1; }
+  .btn { border: 1px solid var(--border2); border-radius: var(--radius); padding: 7px 16px; font-size: 14px; cursor: pointer; background: transparent; color: var(--text); font-family: Georgia, serif; white-space: nowrap; transition: background 0.15s; }
+  .btn:hover { background: var(--surface2); }
+  .btn-primary { background: var(--text); color: var(--surface); border-color: var(--text); }
+  .btn-primary:hover { opacity: 0.85; background: var(--text); }
+  .btn-sm { padding: 4px 10px; font-size: 12px; }
+  .btn-danger { color: var(--danger); border-color: #e8c5c2; }
+  .btn-danger:hover { background: var(--danger-light); }
+  .btn-edit { color: var(--info); border-color: #b5d0ea; }
+  .btn-edit:hover { background: #e8f0f8; }
+  .btn-save { color: var(--accent); border-color: #a8ccb4; }
+  .btn-save:hover { background: var(--accent-light); }
+  .filter-row { display: flex; gap: 6px; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  .filter-label { font-size: 12px; color: var(--text3); font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 0.5px; }
+  .filter-btn { padding: 4px 12px; font-size: 12px; border: 1px solid var(--border); border-radius: 20px; cursor: pointer; background: transparent; color: var(--text2); font-family: Georgia, serif; transition: all 0.15s; }
+  .filter-btn:hover, .filter-btn.active { background: var(--text); color: var(--surface); border-color: var(--text); }
+  .summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 1.5rem; }
+  .metric { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem 1.1rem; }
+  .metric-label { font-size: 11px; color: var(--text3); font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+  .metric-value { font-size: 22px; font-weight: 700; }
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; table-layout: fixed; }
+  th { text-align: left; font-size: 11px; color: var(--text3); padding: 8px 12px; border-bottom: 1px solid var(--border); font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 0.5px; font-weight: normal; background: var(--surface2); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; word-break: break-word; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--bg); }
+  tr.editing td { background: #fffbf0; }
+  .tag { display: inline-block; font-size: 11px; padding: 2px 9px; border-radius: 20px; font-family: 'Courier New', monospace; }
+  .url-link { color: var(--info); text-decoration: none; font-size: 12px; }
   .url-link:hover { text-decoration: underline; }
-  .cat-select { border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 7px 10px; font-size: 14px; font-family: var(--font-sans); color: var(--color-text-primary); background: var(--color-background-primary); width: 100%; }
-  .filter-row { display: flex; gap: 8px; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; }
+  .inline-input { width: 100%; border: 1px solid var(--border2); border-radius: var(--radius); padding: 4px 7px; font-size: 13px; font-family: Georgia, serif; color: var(--text); background: var(--surface); }
+  .inline-input:focus { outline: none; border-color: var(--text2); }
+  .action-btns { display: flex; gap: 4px; }
+  .compare-intro { font-size: 14px; color: var(--text2); margin-bottom: 1.25rem; line-height: 1.6; }
+  .compare-group { margin-bottom: 2rem; }
+  .compare-group-title { font-size: 12px; font-weight: normal; font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text2); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .compare-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
+  .compare-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem; }
+  .compare-card.best { border: 2px solid var(--accent); }
+  .best-badge { display: inline-block; font-size: 10px; font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 0.5px; background: var(--accent-light); color: var(--accent-text); padding: 3px 8px; border-radius: 20px; margin-bottom: 8px; }
+  .compare-card .c-name { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+  .compare-card .c-price { font-size: 20px; font-weight: 700; margin: 6px 0; }
+  .compare-card .c-source { font-size: 11px; color: var(--text3); word-break: break-all; }
+  .compare-card .c-diff { font-size: 12px; color: var(--danger); margin-top: 6px; }
+  .empty-state { text-align: center; color: var(--text3); padding: 3rem 1rem; font-size: 14px; }
+  .export-row { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+  .save-notice { font-size: 12px; color: var(--accent); font-family: 'Courier New', monospace; opacity: 0; transition: opacity 0.3s; }
+  .save-notice.show { opacity: 1; }
+  @media print { .add-form, .filter-row, .tabs, .export-row, .btn { display: none !important; } .section { display: block !important; } body { background: white; } }
 </style>
+</head>
+<body>
+<div class="wrapper">
+  <header>
+    <h1>Business Supply Tracker</h1>
+    <p id="date-label"></p>
+  </header>
 
-<div class="container">
   <div class="tabs">
-    <div class="tab active" onclick="showTab('list')">Supplies</div>
-    <div class="tab" onclick="showTab('compare')">Compare</div>
+    <button class="tab active" onclick="showTab('list')">Supplies</button>
+    <button class="tab" onclick="showTab('compare')">Compare</button>
   </div>
 
   <div id="tab-list" class="section visible">
     <div class="add-form">
+      <h3>Add a supply</h3>
       <div class="form-grid">
-        <div><div class="label">Item name</div><input type="text" id="inp-name" placeholder="e.g. Printer paper" /></div>
-        <div><div class="label">Category</div>
-          <select class="cat-select" id="inp-cat">
+        <div class="field"><label>Item name</label><input type="text" id="inp-name" placeholder="e.g. Printer paper" /></div>
+        <div class="field"><label>Category</label>
+          <select id="inp-cat">
             <option value="Office">Office</option>
             <option value="Technology">Technology</option>
             <option value="Furniture">Furniture</option>
@@ -74,67 +111,92 @@
             <option value="Other">Other</option>
           </select>
         </div>
-        <div><div class="label">Unit cost ($)</div><input type="number" id="inp-cost" placeholder="0.00" min="0" step="0.01" /></div>
-        <div><div class="label">Website URL</div><input type="url" id="inp-url" placeholder="https://..." /></div>
+        <div class="field"><label>Unit cost ($)</label><input type="number" id="inp-cost" placeholder="0.00" min="0" step="0.01" /></div>
+        <div class="field"><label>Website URL</label><input type="url" id="inp-url" placeholder="https://..." /></div>
       </div>
-      <div style="display:flex; gap:8px; align-items:center;">
-        <div style="flex:1"><div class="label">Notes</div><input type="text" id="inp-notes" placeholder="Optional notes..." /></div>
-        <div style="margin-top:16px;"><button class="btn btn-primary" onclick="addItem()">+ Add item</button></div>
+      <div class="form-bottom">
+        <div class="field"><label>Notes</label><input type="text" id="inp-notes" placeholder="Optional notes..." /></div>
+        <button class="btn btn-primary" onclick="addItem()">+ Add item</button>
       </div>
     </div>
 
     <div class="filter-row">
-      <span style="font-size:13px; color:var(--color-text-secondary);">Filter:</span>
-      <button class="btn btn-sm active-filter" onclick="setFilter('All')" id="f-All">All</button>
-      <button class="btn btn-sm" onclick="setFilter('Office')" id="f-Office">Office</button>
-      <button class="btn btn-sm" onclick="setFilter('Technology')" id="f-Technology">Technology</button>
-      <button class="btn btn-sm" onclick="setFilter('Furniture')" id="f-Furniture">Furniture</button>
-      <button class="btn btn-sm" onclick="setFilter('Marketing')" id="f-Marketing">Marketing</button>
-      <button class="btn btn-sm" onclick="setFilter('Other')" id="f-Other">Other</button>
+      <span class="filter-label">Filter:</span>
+      <button class="filter-btn active" onclick="setFilter('All')" id="f-All">All</button>
+      <button class="filter-btn" onclick="setFilter('Office')" id="f-Office">Office</button>
+      <button class="filter-btn" onclick="setFilter('Technology')" id="f-Technology">Technology</button>
+      <button class="filter-btn" onclick="setFilter('Furniture')" id="f-Furniture">Furniture</button>
+      <button class="filter-btn" onclick="setFilter('Marketing')" id="f-Marketing">Marketing</button>
+      <button class="filter-btn" onclick="setFilter('Other')" id="f-Other">Other</button>
     </div>
 
     <div class="summary-grid">
       <div class="metric"><div class="metric-label">Total items</div><div class="metric-value" id="m-count">0</div></div>
       <div class="metric"><div class="metric-label">Total cost</div><div class="metric-value" id="m-total">$0.00</div></div>
-      <div class="metric"><div class="metric-label">Most expensive</div><div class="metric-value" id="m-top" style="font-size:16px;">—</div></div>
+      <div class="metric"><div class="metric-label">Most expensive</div><div class="metric-value" id="m-top" style="font-size:15px;">—</div></div>
     </div>
 
-    <div style="background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); overflow:hidden;">
+    <div class="table-wrap">
       <table>
         <thead>
           <tr>
-            <th style="width:22%">Item</th>
-            <th style="width:14%">Category</th>
-            <th style="width:12%">Cost</th>
-            <th style="width:28%">Website</th>
-            <th style="width:16%">Notes</th>
-            <th style="width:8%"></th>
+            <th style="width:20%">Item</th>
+            <th style="width:12%">Category</th>
+            <th style="width:10%">Cost</th>
+            <th style="width:22%">Website</th>
+            <th style="width:20%">Notes</th>
+            <th style="width:16%"></th>
           </tr>
         </thead>
         <tbody id="items-body">
-          <tr id="empty-row"><td colspan="6" style="text-align:center; color:var(--color-text-secondary); padding: 2rem;">No items yet — add one above</td></tr>
+          <tr><td colspan="6" class="empty-state">No items yet — add one above</td></tr>
         </tbody>
       </table>
+    </div>
+
+    <div class="export-row">
+      <span class="save-notice" id="save-notice">✓ Saved</span>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-sm" onclick="exportCSV()">Export CSV</button>
+        <button class="btn btn-sm" onclick="window.print()">Print</button>
+      </div>
     </div>
   </div>
 
   <div id="tab-compare" class="section">
-    <p style="font-size:14px; color:var(--color-text-secondary); margin-bottom:1rem;">Compare same items from different sources. Select items from your list with the same name to see which is cheapest.</p>
-    <div id="compare-content"></div>
+    <p class="compare-intro">Add the same item name from different sources to compare prices. The cheapest option is highlighted.</p>
+    <div id="compare-content"><div class="empty-state">No comparable items yet. Add the same item name from multiple sources.</div></div>
   </div>
 </div>
 
 <script>
-  let items = [];
-  let nextId = 1;
-  let activeFilter = 'All';
+  let items = [], nextId = 1, activeFilter = 'All', editingId = null;
+  const cats = ['Office','Technology','Furniture','Marketing','Other'];
+  const catStyle = {
+    Office:     { bg:'#e8f0f8', color:'#1a4a7a' },
+    Technology: { bg:'#f0edf8', color:'#4a3580' },
+    Furniture:  { bg:'#fdf5e6', color:'#8a5c0a' },
+    Marketing:  { bg:'#e8f0eb', color:'#1e3d2a' },
+    Other:      { bg:'#f0efe9', color:'#6b6960' }
+  };
 
-  const catColors = { Office:'c-blue', Technology:'c-purple', Furniture:'c-amber', Marketing:'c-teal', Other:'c-gray' };
-  const catBg = { Office:'var(--color-background-info)', Technology:'#EEEDFE', Furniture:'#FAEEDA', Marketing:'var(--color-background-success)', Other:'var(--color-background-secondary)' };
-  const catText = { Office:'var(--color-text-info)', Technology:'#534AB7', Furniture:'#854F0B', Marketing:'var(--color-text-success)', Other:'var(--color-text-secondary)' };
+  document.getElementById('date-label').textContent = new Date().toLocaleDateString('en-CA', { year:'numeric', month:'long', day:'numeric' });
+
+  try {
+    const saved = localStorage.getItem('supply-tracker-v2');
+    if(saved) { items = JSON.parse(saved); nextId = items.length ? Math.max(...items.map(i=>i.id))+1 : 1; }
+  } catch(e) {}
+  renderTable(); updateMetrics();
+
+  function persist() {
+    try { localStorage.setItem('supply-tracker-v2', JSON.stringify(items)); } catch(e) {}
+    const n = document.getElementById('save-notice');
+    n.classList.add('show');
+    setTimeout(() => n.classList.remove('show'), 1800);
+  }
 
   function showTab(t) {
-    document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['list','compare'][i] === t));
+    document.querySelectorAll('.tab').forEach((el,i) => el.classList.toggle('active', ['list','compare'][i]===t));
     document.getElementById('tab-list').classList.toggle('visible', t==='list');
     document.getElementById('tab-compare').classList.toggle('visible', t==='compare');
     if(t==='compare') renderCompare();
@@ -142,59 +204,93 @@
 
   function setFilter(f) {
     activeFilter = f;
-    document.querySelectorAll('.active-filter').forEach(el => el.classList.remove('active-filter'));
-    document.getElementById('f-'+f).classList.add('active-filter');
+    document.querySelectorAll('.filter-btn').forEach(el => el.classList.remove('active'));
+    document.getElementById('f-'+f).classList.add('active');
     renderTable();
   }
 
   function addItem() {
     const name = document.getElementById('inp-name').value.trim();
     const cost = parseFloat(document.getElementById('inp-cost').value);
-    const url = document.getElementById('inp-url').value.trim();
-    const cat = document.getElementById('inp-cat').value;
-    const notes = document.getElementById('inp-notes').value.trim();
-    if(!name || isNaN(cost)) { alert('Please enter an item name and cost.'); return; }
+    const url  = document.getElementById('inp-url').value.trim();
+    const cat  = document.getElementById('inp-cat').value;
+    const notes= document.getElementById('inp-notes').value.trim();
+    if(!name || isNaN(cost) || cost < 0) { alert('Please enter a valid item name and cost.'); return; }
     items.push({ id: nextId++, name, cost, url, cat, notes });
-    document.getElementById('inp-name').value = '';
-    document.getElementById('inp-cost').value = '';
-    document.getElementById('inp-url').value = '';
-    document.getElementById('inp-notes').value = '';
-    renderTable();
-    updateMetrics();
+    ['inp-name','inp-cost','inp-url','inp-notes'].forEach(id => document.getElementById(id).value = '');
+    renderTable(); updateMetrics(); persist();
   }
 
   function removeItem(id) {
+    if(!confirm('Remove this item?')) return;
     items = items.filter(i => i.id !== id);
-    renderTable();
-    updateMetrics();
+    if(editingId === id) editingId = null;
+    renderTable(); updateMetrics(); persist();
+  }
+
+  function startEdit(id) { editingId = id; renderTable(); }
+  function cancelEdit() { editingId = null; renderTable(); }
+
+  function saveEdit(id) {
+    const item = items.find(i => i.id === id);
+    if(!item) return;
+    const name  = document.getElementById('e-name-'+id).value.trim();
+    const cost  = parseFloat(document.getElementById('e-cost-'+id).value);
+    const url   = document.getElementById('e-url-'+id).value.trim();
+    const cat   = document.getElementById('e-cat-'+id).value;
+    const notes = document.getElementById('e-notes-'+id).value.trim();
+    if(!name || isNaN(cost) || cost < 0) { alert('Please enter a valid name and cost.'); return; }
+    Object.assign(item, { name, cost, url, cat, notes });
+    editingId = null;
+    renderTable(); updateMetrics(); persist();
   }
 
   function renderTable() {
     const body = document.getElementById('items-body');
     const filtered = activeFilter === 'All' ? items : items.filter(i => i.cat === activeFilter);
-    if(filtered.length === 0) {
-      body.innerHTML = '<tr id="empty-row"><td colspan="6" style="text-align:center; color:var(--color-text-secondary); padding: 2rem;">' + (items.length===0 ? 'No items yet — add one above' : 'No items in this category') + '</td></tr>';
+    if(!filtered.length) {
+      body.innerHTML = `<tr><td colspan="6" class="empty-state">${items.length===0?'No items yet — add one above':'No items in this category'}</td></tr>`;
       return;
     }
     body.innerHTML = filtered.map(item => {
-      const urlDisplay = item.url ? `<a href="${item.url}" class="url-link" target="_blank">${item.url.replace(/^https?:\/\/(www\.)?/,'').split('/')[0]}</a>` : '<span style="color:var(--color-text-secondary)">—</span>';
+      const s = catStyle[item.cat] || catStyle.Other;
+      if(editingId === item.id) {
+        const opts = cats.map(c=>`<option value="${c}"${c===item.cat?' selected':''}>${c}</option>`).join('');
+        return `<tr class="editing">
+          <td><input class="inline-input" id="e-name-${item.id}" value="${esc(item.name)}" /></td>
+          <td><select class="inline-input" id="e-cat-${item.id}">${opts}</select></td>
+          <td><input class="inline-input" type="number" id="e-cost-${item.id}" value="${item.cost.toFixed(2)}" min="0" step="0.01" style="width:80px"/></td>
+          <td><input class="inline-input" type="url" id="e-url-${item.id}" value="${esc(item.url||'')}" /></td>
+          <td><input class="inline-input" id="e-notes-${item.id}" value="${esc(item.notes||'')}" /></td>
+          <td><div class="action-btns">
+            <button class="btn btn-sm btn-save" onclick="saveEdit(${item.id})">Save</button>
+            <button class="btn btn-sm" onclick="cancelEdit()">Cancel</button>
+          </div></td>
+        </tr>`;
+      }
+      const urlDisplay = item.url
+        ? `<a href="${esc(item.url)}" class="url-link" target="_blank">${esc(item.url.replace(/^https?:\/\/(www\.)?/,'').split('/')[0])}</a>`
+        : `<span style="color:var(--text3)">—</span>`;
       return `<tr>
-        <td style="font-weight:500">${esc(item.name)}</td>
-        <td><span class="tag" style="background:${catBg[item.cat]};color:${catText[item.cat]}">${item.cat}</span></td>
+        <td style="font-weight:700">${esc(item.name)}</td>
+        <td><span class="tag" style="background:${s.bg};color:${s.color}">${item.cat}</span></td>
         <td>$${item.cost.toFixed(2)}</td>
         <td>${urlDisplay}</td>
-        <td style="color:var(--color-text-secondary);font-size:13px">${esc(item.notes||'')}</td>
-        <td><button class="btn btn-sm btn-danger" onclick="removeItem(${item.id})">Remove</button></td>
+        <td style="color:var(--text2);font-size:13px">${esc(item.notes||'')}</td>
+        <td><div class="action-btns">
+          <button class="btn btn-sm btn-edit" onclick="startEdit(${item.id})">Edit</button>
+          <button class="btn btn-sm btn-danger" onclick="removeItem(${item.id})">Remove</button>
+        </div></td>
       </tr>`;
     }).join('');
   }
 
   function updateMetrics() {
-    const total = items.reduce((s,i) => s+i.cost, 0);
-    const top = items.reduce((a,b) => b.cost > (a?a.cost:-1) ? b : a, null);
+    const total = items.reduce((s,i)=>s+i.cost,0);
+    const top = items.reduce((a,b)=>b.cost>(a?a.cost:-1)?b:a,null);
     document.getElementById('m-count').textContent = items.length;
-    document.getElementById('m-total').textContent = '$' + total.toFixed(2);
-    document.getElementById('m-top').textContent = top ? top.name + ' ($' + top.cost.toFixed(2) + ')' : '—';
+    document.getElementById('m-total').textContent = '$'+total.toFixed(2);
+    document.getElementById('m-top').textContent = top ? top.name+' ($'+top.cost.toFixed(2)+')' : '—';
   }
 
   function renderCompare() {
@@ -204,35 +300,40 @@
       if(!groups[key]) groups[key] = { label: item.name, items: [] };
       groups[key].items.push(item);
     });
-    const multiGroups = Object.values(groups).filter(g => g.items.length > 1);
+    const multi = Object.values(groups).filter(g=>g.items.length>1);
     const el = document.getElementById('compare-content');
-    if(multiGroups.length === 0) {
-      el.innerHTML = '<div style="text-align:center; padding:2rem; color:var(--color-text-secondary);">Add the same item name from multiple sources to compare prices here.</div>';
-      return;
-    }
-    el.innerHTML = multiGroups.map(g => {
-      const sorted = [...g.items].sort((a,b) => a.cost - b.cost);
-      const cheapest = sorted[0];
+    if(!multi.length) { el.innerHTML='<div class="empty-state">No comparable items yet. Add the same item name from multiple sources.</div>'; return; }
+    el.innerHTML = multi.map(g => {
+      const sorted = [...g.items].sort((a,b)=>a.cost-b.cost);
+      const best = sorted[0];
       const cards = sorted.map(item => {
-        const isBest = item.id === cheapest.id;
-        const urlLabel = item.url ? item.url.replace(/^https?:\/\/(www\.)?/,'').split('/')[0] : 'No URL';
-        const savings = item.cost - cheapest.cost;
-        return `<div class="compare-card${isBest?' selected':''}">
-          ${isBest ? '<div class="best-badge">Best price</div>' : ''}
-          <div class="name">${esc(item.name)}</div>
-          <div class="price">$${item.cost.toFixed(2)}</div>
-          <div class="source">${urlLabel}</div>
-          ${!isBest ? `<div style="font-size:12px; color:var(--color-text-danger); margin-top:6px;">+$${savings.toFixed(2)} more</div>` : ''}
+        const isBest = item.id===best.id;
+        const src = item.url ? item.url.replace(/^https?:\/\/(www\.)?/,'').split('/')[0] : 'No URL';
+        const diff = item.cost - best.cost;
+        return `<div class="compare-card${isBest?' best':''}">
+          ${isBest?'<div class="best-badge">Best price</div>':''}
+          <div class="c-name">${esc(item.name)}</div>
+          <div class="c-price">$${item.cost.toFixed(2)}</div>
+          <div class="c-source">${esc(src)}</div>
+          ${!isBest?`<div class="c-diff">+$${diff.toFixed(2)} more</div>`:''}
         </div>`;
       }).join('');
-      return `<div style="margin-bottom:1.5rem;">
-        <div style="font-size:14px; font-weight:500; margin-bottom:8px;">${esc(g.label)}</div>
-        <div class="compare-grid">${cards}</div>
-      </div>`;
+      return `<div class="compare-group"><div class="compare-group-title">${esc(g.label)} — ${sorted.length} sources</div><div class="compare-cards">${cards}</div></div>`;
     }).join('');
   }
 
-  function esc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  function exportCSV() {
+    if(!items.length) { alert('No items to export.'); return; }
+    const rows = [['Name','Category','Cost','Website','Notes'], ...items.map(i=>[i.name,i.cat,i.cost.toFixed(2),i.url||'',i.notes||''])];
+    const csv = rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+    a.download = 'business_supplies.csv'; a.click();
   }
+
+  function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+  document.addEventListener('keydown', e => { if(e.key==='Escape'&&editingId) cancelEdit(); });
 </script>
+</body>
+</html>
